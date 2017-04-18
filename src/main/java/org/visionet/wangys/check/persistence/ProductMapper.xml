@@ -20,7 +20,7 @@
 		select * from productinfo p,producttype t where p.proType=t.typeId LIMIT #{startRow},#{endRow}
 	</select>
 	<!-- 查询总条数 -->
-	<select id="getProductTotal" resultType="int">
+	<select id="getProductTotal"  resultType="Integer" >
 		select count(*) from productinfo
 	</select>
 	<!--添加产品 -->

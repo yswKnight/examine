@@ -34,7 +34,6 @@
 
 
 
-
 	<!--扫描在指定包中的映射器 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="org.visionet.wangys.check.persistence" />
