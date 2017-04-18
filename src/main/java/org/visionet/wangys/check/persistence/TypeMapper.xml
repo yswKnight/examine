@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.visionet.wangys.check.persistence.TypeMapper">
+	<resultMap type="Type" id="TypeResultMapper">
+		<!-- 产品类别编号 -->
+		<id property="typeid" column="typeId" />
+		<!-- 产品类别名称 -->
+		<result property="typename" column="typeName" />
+	</resultMap>
+	
+	<!--查看产品类别 -->
+	<select id="findAllType" parameterType="Type"
+		resultMap="TypeResultMapper">
+		select * from productType
+	</select>
+	<!--添加产品类别 -->
+	<insert id="insertType" parameterType="Type">
+	insert into productType(typeId,typeName) values(#{typeid},#{typename,jdbcType=VARCHAR})
+	</insert>
+		<!-- 修改产品类别 -->
+	<update id="updateType" parameterType="Type" > 
+  	update productType set typeName=#{typename} where typeId=#{typeid}
+	</update>
+ 	<!-- 删除产品类别 -->
+	<delete id="deleteTypeById" parameterType="Integer">
+	  delete from productType where typeId=#{typeid}
+	</delete>
+</mapper>

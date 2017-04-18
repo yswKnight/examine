@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.visionet.wangys.check.persistence.ProductMapper">
+	<resultMap id="ProductResultMapper" type="Product">
+		<!-- 产品编号 -->
+		<id property="proid" column="proId" />
+		<!-- 产品名称 -->
+		<result property="proname" column="proName" />
+		<!-- 产品描述 -->
+		<result property="proremark" column="proRemark" />
+		<!-- 产品类别 -->
+		<association property="protype" column="proType" javaType="Type">
+			<id property="typeid" column="typeId" />
+			<result property="typename" column="typeName" />
+		</association>
+	</resultMap>
+	<!--查看产品 -->
+	<select id="findProductAll" resultType="Product" parameterType="Page" resultMap="ProductResultMapper">
+		select * from productinfo p,producttype t where p.proType=t.typeId LIMIT #{startRow},#{endRow}
+	</select>
+	<!-- 查询总条数 -->
+	<select id="getProductTotal" resultType="int">
+		select count(*) from productinfo
+	</select>
+	<!--添加产品 -->
+	<insert id="insertProduct" parameterType="Product" >
+	insert into productinfo(proId,proName,proType,proRemark) values(#{proid},#{proname,jdbcType=VARCHAR},#{protype.typeid},#{proremark,jdbcType=VARCHAR})
+	</insert>
+	<!-- 根据Id查询对应产品信息 -->
+	<select id="findProductById" resultType="Product"  parameterType="Integer"  resultMap="ProductResultMapper">
+		select * from productinfo p,producttype t where p.proType=t.typeId AND p.proId=#{proid}
+	</select>
+	<!-- 修改产品 -->
+	<update id="updateProduct" parameterType="Product" > 
+  	update productinfo set proName=#{proname},proType=#{protype.typeid},proRemark=#{proremark} where proId=#{proid}
+	</update>
+ 	<!-- 删除产品 -->
+	<delete id="deleteProductById" parameterType="Integer">
+	  delete from productinfo where proId=#{proid}
+	</delete>
+
+</mapper>
