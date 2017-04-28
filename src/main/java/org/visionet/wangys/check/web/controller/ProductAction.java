@@ -12,8 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.visionet.wangys.check.domain.Page;
+import org.visionet.wangys.check.bean.PageBean;
 import org.visionet.wangys.check.domain.Product;
 import org.visionet.wangys.check.service.ProductService;
 import org.visionet.wangys.check.service.TypeService;
@@ -48,48 +47,23 @@ public class ProductAction {
 	 */
 	@RequestMapping("/listProductInfo")
 	@ResponseBody
-	public List<Product> listProductInfo(ModelMap map, HttpServletRequest request,Page page) throws Exception {
-		//总页数
-		int total=0;
-		//总记录条数
-		int zongshu = productService.getProductTotal();
-		//当前页数
-		int pageNo=1;
-		
-		if(zongshu%5==0){
-			total = zongshu/5;
-		}else{
-			total = zongshu/5+1;
-		}
-		
-		if(page.getStartRow()==0&&page.getPageNo()==0){
-			page.setStartRow(0);
-			page.setEndRow(5);
-			page.setPageNo(1);
-			//request.getSession().setAttribute("page", page);
-		}else{
-			if(page.getPageNo()>total){
-				page.setPageNo(total);
-			}
-			if(page.getPageNo()==0){
-				page.setPageNo(1);
-			}
-			page.setStartRow((page.getPageNo()-1)*5);
-			page.setEndRow(100);
-		}
-		
-		List<Product> list  = productService.listProductAll(page);
-		System.err.println(list.toString());
-		map.addAttribute("page", page);
-		Product pro = (Product)list.get(0);
-		return list;
-	}
-	
-/*	public List<Product> listProductInfo(){
+	public List<Product> listProductInfo(){
 		logger.info("===ajax===");
 		List<Product> list=this.productService.listProductAll();
 		return list;
-	}*/
+	}
+	/***************************************************************
+	 * 
+	 * @param pageno 当前页 分页
+	 * @return
+	 */
+	@RequestMapping("/listProductInfoByPage")
+	@ResponseBody
+	public PageBean<Product> listProductInfoByPage(Integer pageno){
+		PageBean<Product> page=this.productService.getAllProductsByPage(pageno);
+		return page;
+	}
+	
 	/***************************************************************************************************
 	 * @return 增加产品信息
 	 */

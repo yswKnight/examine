@@ -10,11 +10,12 @@
 <link href="css/bootstrap.min.css"  type="text/css" rel="stylesheet" />
 <script type="text/javascript"  src="js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript"  src="layer/layer.js"></script>
+<script type="text/javascript"  src="layer/laypage/laypage.js"></script>
 <script type="text/javascript">
 $(function(){
 	//加载就显示产品记录
 	//byPage();
-	show();
+	ready();
 
 	//添加
 	$("#savebtn").click(function(){
@@ -40,10 +41,11 @@ $(function(){
 				$.post("${pageContext.request.contextPath }/product/saveProductInfo",submitlist,function(res){
 					if(res=="success"){
 						layer.msg('添加成功',{icon:6});
+						$("form").get(0).reset();
 					}else{
 						layer.msg('添加失败',{icon:5});
 					}
-					show();
+					ready();
 				});
 				layer.closeAll();
 				$("#saveProduct").hide();
@@ -100,7 +102,7 @@ $(function(){
 					}else{
 						layer.msg('修改失败',{icon:5});
 					}
-					show(); 
+					  ready();
 				}); 
 				layer.closeAll();
 				$("#updateProduct").hide();
@@ -124,7 +126,7 @@ $(function(){
  					}else{
  						layer.msg('删除失败',{icon:5});
  					}
- 					show();
+ 	 				ready();
  	 			});
  				 //layer.close(index);
  				});
@@ -132,9 +134,7 @@ $(function(){
 	});//删除end
 });
 	//查看
-function show(){
-	//alert("1234");
-	 $.post("${pageContext.request.contextPath }/product/listProductInfo",{"pageNo":1},function(res){
+function show(res){
 		 var content1="";
 			$.each(res,function(i,pro){
 				content1+="<tr  align='center'>"
@@ -146,36 +146,28 @@ function show(){
 					content1+="</tr>"
 			});
 			$("#tobody").html(content1);
-	 },"json") 
 }
 //分页
-function byPage(){
-		$.post("${pageContext.request.contextPath }/product/listProductInfo",{"pageNo":1},function(result){
-			//listUser(result);
-			var pageZong=result.page;
-			alert(pageZong);
-			var bypage=$("#bypage");
-			//分页方法
-		/* 	laypage({
-	        cont: bypage, //容器。值支持id名、原生dom对象，jquery对象。
-	        pages: pageZong, //通过后台拿到的总页数
-	        curr: 1, //初始化当前页
-	        skin: '#1E9FFF',
-	        jump: function(e){ //触发分页后的回调
-	         $.post('ajax/rsc_listUserForPage.action', {"pageNo": e.curr}, function(result){
-	              listUser(result)
-	            },"json");
-	        }
-	  	});//laypage
-			 */
-			
-		},"json");
-}
-//${pageContext.request.contextPath}/product/toUpdate?pid="+pro.proid+"
+function ready(){
+			$.post("${pageContext.request.contextPath}/product/listProductInfoByPage",{pageno:1},function(res){
+				show(res.result);
+			laypage({
+		        cont: bypage, //容器。值支持id名、原生dom对象，jquery对象。
+		        pages: res.totalPageNum, //通过后台拿到的总页数
+		        curr: 1, //初始化当前页
+		        skin: '#1E9FFF',
+		        jump: function(e){ //触发分页后的回调
+		         $.getJSON('${pageContext.request.contextPath}/product/listProductInfoByPage', {"pageno": e.curr}, function(res){
+		 			show(res.result);
+		            });
+		        }
+		        });
+		  	},"json")
+		}
 </script>
 <body>
 	<h3 align="center">产品维护中心</h3>
-	<button class="btn btn-success"  id="savebtn" >增加新用户</button>
+	<button class="btn btn-success"  id="savebtn" >增加新产品</button>
 	<table align="center" border="1" width="70%"
 		class="table table-bordered">
 		<thead>
@@ -191,10 +183,9 @@ function byPage(){
 
 		</tbody>
 	</table>
-	<div id="pageDiv" align="center">
-			<a href="listProductInfo?pageNo=${page.pageNo-1 }">上一页</a>&nbsp;&nbsp;&nbsp;<a href="listProductInfo?pageNo=${page.pageNo+1 }">下一页</a>
-	</div>
-	
+	 <!--分页显示-->
+               <br>
+         	 <div id="bypage" style="font-size: 18px;" align="center"></div>
 	<!-- 添加框 -->
 	<div id="saveProduct" style="display: none;">
 	<form action="${pageContext.request.contextPath}/product/saveProductInfo" method="post"  id="saveForm">

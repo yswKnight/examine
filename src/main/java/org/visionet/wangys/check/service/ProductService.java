@@ -2,7 +2,7 @@ package org.visionet.wangys.check.service;
 
 import java.util.List;
 
-import org.visionet.wangys.check.domain.Page;
+import org.visionet.wangys.check.bean.PageBean;
 import org.visionet.wangys.check.domain.Product;
 
 /***********************
@@ -15,11 +15,11 @@ public interface ProductService {
 		//添加产品
 		public void addProduct(Product product);
 		//查询全部产品
-		public List<Product> listProductAll(Page page);
+		public List<Product> listProductAll();
 		//查询总条数
 		public int getProductTotal();
 		//分页
-		//public PageInfo<Product> queryPageList(Map<String, Object> map);
+		public PageBean<Product>  getAllProductsByPage(int pageNo);
 		//根据Id查询对应产品信息
 		public Product listProductById(Integer pid);
 		//修改产品数据

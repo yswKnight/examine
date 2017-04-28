@@ -16,11 +16,15 @@
 		</association>
 	</resultMap>
 	<!--查看产品 -->
-	<select id="findProductAll" resultType="Product" parameterType="Page" resultMap="ProductResultMapper">
-		select * from productinfo p,producttype t where p.proType=t.typeId LIMIT #{startRow},#{endRow}
+	<select id="findProductAll" resultType="Product" resultMap="ProductResultMapper">
+		select * from productinfo p,producttype t where p.proType=t.typeId
+	</select>
+	 <!-- 分页 -->
+   <select id="findAllByPage"   parameterType="java.util.Map" resultMap="ProductResultMapper">
+		select * from productinfo p,producttype t where p.proType=t.typeId limit #{page.dbIndex},#{page.dbNumber} 
 	</select>
 	<!-- 查询总条数 -->
-	<select id="getProductTotal"  resultType="Integer" >
+	<select id="getProductTotal"  resultType="int" >
 		select count(*) from productinfo
 	</select>
 	<!--添加产品 -->
